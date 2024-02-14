@@ -1,0 +1,7 @@
+.venv
+.*.swp
+__pycache__
+.pytest_cache
+.vscode
+.ruff_cache
+.git
