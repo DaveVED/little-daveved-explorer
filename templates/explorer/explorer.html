@@ -1,26 +1,25 @@
 {% extends "base.html" %}
 
 {% block content %}
+<!-- /explorer content -->
 <main class="container mt-5">
+
+    <!-- /explorer content Heaader -->
     <header>
         <h1 class="text-center mb-4">Welcome to Dave's Global Adventure!</h1>
     </header>
+    
+    <!-- /explorer content Context -->
     <section class="text-center mb-4">
         <p>
             Embark on a journey with us! Our beloved Dave has already become an adventurous spirit, even before stepping into the world. We invite you to share your love and wisdom by marking your location on the map and suggesting destinations for Dave's future explorations.
         </p>
     </section>
 
-    <section>
-        <h2>Join Dave's Adventure</h2>
-        <p>Participate in two simple steps:</p>
-        <ol>
-            <li>Interact with the map to pinpoint your current location or a destination you recommend for Dave. A prompt will confirm your selection.</li>
-            <li>Or, input a location directly into the provided search field and select either "Your Location" or "Suggested Destination." Confirm your submission to contribute to Dave's global map of affection and discovery.</li>
-        </ol>
-    </section>
-
-    {% include 'explorer/map.html' %}
+    <!-- /explorer map content -->
+    <div>
+        {% include 'explorer/map.html' %}
+    </div>
 
 </main>
 {% endblock %}

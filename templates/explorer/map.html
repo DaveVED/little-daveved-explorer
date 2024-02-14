@@ -1,64 +1,24 @@
-{% block style %}
-<style>
-  #map { height: 400px; /* Adjusted height */ }
-  @media (min-width: 768px) {
-    .map-container { padding: 0; }
-  }
-</style>
-{% endblock %}
-
 {% block content %}
-    <div class="card">
+    <!-- Map content wrapper. It's in a card. All should be wrapped in it -->
+    <div class="card" data-title="{{ title }}">
+
+        <!-- Card Body (Map content... Manual Entry of coordinates and a leafletjs map)-->
         <div class="card-body">
-            <form>
-                <div class="row g-3 align-items-center justify-content-between">
-                    <!-- Coordinates Input -->
-                    <div class="col-12 col-lg">
-                        <input type="text" class="form-control" id="coordinatesInput" placeholder="Latitude, Longitude">
-                    </div>
 
-                    <!-- Radio Options -->
-                    <div class="col-12 col-lg-auto">
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="mapOptions" id="locationOption" value="location">
-                            <label class="form-check-label" for="locationOption">
-                                <i class="material-icons" style="color:#0bc336;">public</i> Your Location
-                            </label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="mapOptions" id="destinationOption" value="destination">
-                            <label class="form-check-label" for="destinationOption">
-                                <i class="material-icons" style="color:#0b7bc3;">flight_takeoff</i> Suggested Destination
-                            </label>
-                        </div>
-                    </div>
-
-                    <!-- Submit Button -->
-                    <div class="col-12 col-lg-auto">
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-        <!-- Map container adjusted for consistent width -->
-        <div class="card-body map-container">
-            <div id="map"></div>
+          <!-- User Input for for Coordinates, with htmx trigger -->
+          {% include 'explorer/coordinate-form.html' %}
         </div>
     </div>
 {% endblock %}
 
 {% block javascript %}
 <script>
-    var map = L.map('map').setView([32.77917, -96.80889], 1);
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
-
-    var popup = L.popup();
-    map.on('click', onMapClick);
-
-    function onMapClick(e) {
-        popup.setLatLng(e.latlng).setContent("You clicked the map at " + e.latlng.toString()).openOn(map);
-    }
+    htmx.on('htmx:afterSwap', function(event) {
+        var cardElement = document.querySelector('.card');
+        if (cardElement) {
+            var title = cardElement.getAttribute('data-title');
+            console.log(`Title222 from the response: ${title}`);
+        }
+    });
 </script>
 {% endblock %}
