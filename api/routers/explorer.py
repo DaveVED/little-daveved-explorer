@@ -6,12 +6,12 @@ router = APIRouter()
 templates = Jinja2Templates(directory="templates")
 
 @router.get("/")
-def world_map_root(request: Request):
+def explorer(request: Request):
     context = {
         "request": request,
         "title": "World Map"
     }
 
-    response = templates.TemplateResponse("world-map/map.html", context)
+    response = templates.TemplateResponse("explorer/explorer.html", context)
 
     return response
