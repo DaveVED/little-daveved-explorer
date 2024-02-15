@@ -5,7 +5,7 @@ from fastapi.templating import Jinja2Templates
 from daveved.api.models.coordinate import get_all_coordinates
 
 router = APIRouter()
-templates = Jinja2Templates(directory="daveved/templates")
+templates = Jinja2Templates(directory="templates")
 
 # Dependency to get a database session
 def get_db():
