@@ -28,4 +28,4 @@ jobs:
       - name: Lint with ruff
         run: |
           ruff cehck daveved
-          ruff fix aveved
+          ruff fix daveved
