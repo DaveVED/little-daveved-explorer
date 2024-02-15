@@ -22,3 +22,9 @@ docker run -p 8001:8001 little-daveved-web-app
 ```bash
 docker-compose up -d
 ```
+
+### Docker Hub
+```bash
+docker pull daveved/little-daveved-web-app
+docker run -d -p 8001:8001 daveved/little-daveved-web-app
+```
