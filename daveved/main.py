@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
-import api.routers.home as home
-import api.routers.explorer as explorer
-from api.database import Base, engine  # Import Base and engine
+import daveved.api.routers.home as home
+import daveved.api.routers.explorer as explorer
+from daveved.api.database import Base, engine  # Import Base and engine
 
 from fastapi import FastAPI
 

@@ -1,12 +1,11 @@
-from fastapi import APIRouter, Request, Form, Depends
+from fastapi import APIRouter, Request, Depends
 from sqlalchemy.orm import Session
-from api.database import SessionLocal
+from daveved.api.database import SessionLocal
 from fastapi.templating import Jinja2Templates
-from api.models.coordinate import add_coordinate, get_all_coordinates
-from api.util.validators import parse_coordinates
+from daveved.api.models.coordinate import get_all_coordinates
 
 router = APIRouter()
-templates = Jinja2Templates(directory="templates")
+templates = Jinja2Templates(directory="daveved/templates")
 
 # Dependency to get a database session
 def get_db():

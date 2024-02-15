@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  daveved_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8001"
+    volumes:
+      - .:/app
+    environment:
+      - MODULE_NAME=daveved.main
+      - VARIABLE_NAME=app
+      - RELOAD=true
