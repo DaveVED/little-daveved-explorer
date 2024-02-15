@@ -3,3 +3,5 @@ fastapi
 Jinja2
 python-multipart
 SQLAlchemy
+ruff
+pytest
