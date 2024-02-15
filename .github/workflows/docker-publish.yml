@@ -4,7 +4,7 @@ run-name: ${{ github.actor }} is publishing docker file... 🐳
 on:
   push:
     branches:
-      - master
+      - main
   workflow_dispatch:
 
 jobs:
