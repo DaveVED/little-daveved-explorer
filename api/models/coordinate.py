@@ -2,6 +2,7 @@ from sqlalchemy import Column, Float, Integer, String, DateTime
 from sqlalchemy.orm import Session
 from api.database import Base
 from datetime import datetime
+from typing import List
 
 class Coordinate(Base):
     __tablename__ = "coordinates"
@@ -19,3 +20,6 @@ def add_coordinate(db: Session, latitude: float, longitude: float, type: str, us
     db.commit()
     db.refresh(new_coordinate)
     return new_coordinate
+
+def get_all_coordinates(db: Session) -> List[Coordinate]:
+    return db.query(Coordinate).all()

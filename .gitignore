@@ -6,3 +6,8 @@ __pycache__
 .ruff_cache
 .git
 sql_app.db
+
+# ew
+/scripts/
+little-daveved-test-server.pem
+server-login.sh

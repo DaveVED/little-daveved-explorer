@@ -2,7 +2,7 @@ from fastapi import APIRouter, Request, Form, Depends
 from sqlalchemy.orm import Session
 from api.database import SessionLocal
 from fastapi.templating import Jinja2Templates
-from api.models.coordinate import add_coordinate
+from api.models.coordinate import add_coordinate, get_all_coordinates
 from api.util.validators import parse_coordinates
 
 router = APIRouter()
@@ -18,25 +18,19 @@ def get_db():
 
 @router.get("/")
 def explorer(request: Request, db: Session = Depends(get_db)):
-    context = {
-        "request": request,
-        "title": "World Map"
-    }
-    return templates.TemplateResponse("explorer/explorer.html", context)
-
-@router.post("/coordinates")
-def explorer_coordinates(request: Request, coordinateContent: str = Form(...), mapOptions: str = Form(...), db: Session = Depends(get_db)):
-    print("HELLO WORLD", "   ", coordinateContent, "   ", mapOptions)
-
-    latitude, longtitude = parse_coordinates(coordinateContent)
-    coordinate = add_coordinate(db, latitude, longtitude, "Test", "test222")
-
+    coordinates_query = get_all_coordinates(db)
+    coordinates = [
+        {
+            "latitude": coordinate.latitude,
+            "longitude": coordinate.longitude,
+            "type": coordinate.type,
+            "created_by": coordinate.created_by,
+            "created_on": coordinate.created_on.strftime('%Y-%m-%d %H:%M:%S')
+        } for coordinate in coordinates_query
+    ]
     context = {
         "request": request,
         "title": "World Map",
-        "coordinateContent": coordinateContent,
-        "mapOptions": mapOptions,
-        "coordinate": coordinate
+        "coordinates": coordinates
     }
-
-    return templates.TemplateResponse("explorer/coordinate-form.html", context)
+    return templates.TemplateResponse("explorer/explorer.html", context)

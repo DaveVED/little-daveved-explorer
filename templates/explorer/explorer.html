@@ -1,25 +1,39 @@
+<!-- This is the /explorer path wrapper. It holds all the components. -->
+<!-- In effort to learn HTMX it broken out to many smaller components. -->
 {% extends "base.html" %}
 
 {% block content %}
 <!-- /explorer content -->
-<main class="container mt-5">
+    <div class="container mt-5">
+        <!-- Intro -->
+        {% include 'explorer/intro.html' %}
 
-    <!-- /explorer content Heaader -->
-    <header>
-        <h1 class="text-center mb-4">Welcome to Dave's Global Adventure!</h1>
-    </header>
-    
-    <!-- /explorer content Context -->
-    <section class="text-center mb-4">
-        <p>
-            Embark on a journey with us! Our beloved Dave has already become an adventurous spirit, even before stepping into the world. We invite you to share your love and wisdom by marking your location on the map and suggesting destinations for Dave's future explorations.
-        </p>
-    </section>
-
-    <!-- /explorer map content -->
-    <div>
-        {% include 'explorer/map.html' %}
+        <!-- Content -->
+        {% include 'fragments/map.html' with context %}
+        {% include 'explorer/history.html' with context %}
     </div>
+{% endblock %}
 
-</main>
+{% block javascript %}
+    <script>
+        // Parse the coordinates JSON passed from the server
+        var coordinates = JSON.parse('{{ coordinates | tojson | safe }}');
+
+        // Initialize the Leaflet map
+        var map = L.map('map').setView([51.505, -0.09], 13); // Consider dynamically setting the view based on your coordinates
+
+        // Add an OpenStreetMap tile layer to the map
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Iterate over the coordinates to add markers to the map
+        coordinates.forEach(function(coordinate) {
+            console.log(JSON.stringify(coordinate));
+            var marker = L.marker([coordinate.latitude, coordinate.longitude])
+                .bindPopup("<b>Type:</b> " + coordinate.type + "<br><b>Latitude:</b> " + coordinate.latitude + "<br><b>Longitude:</b> " + coordinate.longitude)
+                .addTo(map);
+        });
+    </script>
 {% endblock %}
