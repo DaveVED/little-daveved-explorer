@@ -25,10 +25,12 @@
     {% endblock %}
 </head>
 <body>
+    <!-- Header (Global )-->
     {% block header %}
     {% include 'fragments/header.html' %}
     {% endblock %}
     
+    <!-- Dynamic Content with some default style -->
     <div style="display: flex; margin: auto">
         {% block content %}{% endblock %}
     </div>
