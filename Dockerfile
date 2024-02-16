@@ -18,9 +18,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 EXPOSE 8001
 
 # Set environment variables for your application
-ENV MODULE_NAME=daveved.main
+ENV MODULE_NAME=app.main
 ENV VARIABLE_NAME=app
 ENV RELOAD="true"
 
 # Command to run your application
-CMD ["uvicorn", "daveved.main:app", "--host", "0.0.0.0", "--port", "8001", "--reload"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8001", "--reload"]

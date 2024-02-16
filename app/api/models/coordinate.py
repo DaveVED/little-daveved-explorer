@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Float, Integer, String, DateTime
 from sqlalchemy.orm import Session
-from daveved.api.database import Base
+from app.api.database import Base
 from datetime import datetime
 from typing import List
 

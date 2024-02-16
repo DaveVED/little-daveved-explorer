@@ -1,11 +1,5 @@
 # little-daveved-web-app
 
-A web app built for "Little David".
-
-## Components (or Features)
-
-- :mag_right: Explorer :mag_right: -- A micro site that allows people travling to the baby shower to drop pens on a map. Suggesting places for us to take you, and where they travled from. 
-
 ## Usage
 
 All commands should be from the projects root directory.

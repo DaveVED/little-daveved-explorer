@@ -8,6 +8,9 @@
         <!-- Intro -->
         {% include 'explorer/intro.html' %}
 
+        <!-- Getting Started -->
+        {% include 'explorer/getting_started.html' %}
+        
         <!-- Content -->
         {% include 'fragments/map.html' with context %}
         {% include 'explorer/history.html' with context %}
@@ -35,5 +38,16 @@
                 .bindPopup("<b>Type:</b> " + coordinate.type + "<br><b>Latitude:</b> " + coordinate.latitude + "<br><b>Longitude:</b> " + coordinate.longitude)
                 .addTo(map);
         });
+
+        var popup = L.popup();
+
+    function onMapClick(e) {
+        popup
+            .setLatLng(e.latlng)
+            .setContent("You clicked the map at " + e.latlng.toString())
+            .openOn(map);
+        }
+
+map.on('click', onMapClick);
     </script>
 {% endblock %}
