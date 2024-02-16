@@ -1,4 +1,5 @@
 # Little Daveved Explorer
+![Docker Publish](https://github.com/daveved/little-daveved-explorer/actions/workflows/docker-publish.yml/badge.svg)
 
 A web application designed to collect and visualize geographical data from users. It allows users to share their starting locations and suggest destinations for future travels. This application is particularly envisioned for events such as baby showers, where guests can indicate where they have traveled from and recommend places to take the baby once born. 
 
