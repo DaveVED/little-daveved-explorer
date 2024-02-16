@@ -1,6 +1,9 @@
 #!/bin/bash
 
-# Quick and dirty script to allow me to port from ec2s during development.
+# Quick and dirty script enabling clean deployments to ubuntu EC2 instances.
+# It ensures all required dependencies are installed, cleans any pre-existing
+# deployments, and deploys a clean build.
+# Must be run as root ulness you setup the user (commented out here)
 
 log() {
     echo "[$(date +'%Y-%m-%dT%H:%M:%S%z')]: $1..."
@@ -31,33 +34,38 @@ install_docker() {
     log "Docker installation completed"
 }
 
-#create_docker_user() {
-#    log "Creating a dedicated Docker user"
-
-    # Create a new user without password, add to docker group
-#    sudo useradd -m -s /bin/bash dockeruser
-#    sudo usermod -aG docker dockeruser
-#    echo "dockeruser ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/dockeruser
-#
-#    log "Docker user created and added to the Docker group"
-#}
-
 install_docker_compose() {
     log "Installing Docker Compose"
 
     # Install Docker Compose
-    sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+    sudo curl -L "https://github.com/docker/compose/releases/download/$(sudo curl -s https://api.github.com/repos/docker/compose/releases/latest | grep 'tag_name' | cut -d '"' -f 4)/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
     sudo chmod +x /usr/local/bin/docker-compose
 
     # Verify installation
-    docker-compose --version
+    sudo docker-compose --version
     log "Docker Compose installation completed"
 }
 
-deploy() {
-    docker pull daveved/little-daveved-web-app
-    docker run -d -p 8001:8001 daveved/little-daveved-web-app
+stop_existing_container() {
+    log "Checking for existing container"
+    CONTAINER_ID=$(sudo docker ps -q -f name=daveved/little-daveved-explorer)
+    if [ ! -z "$CONTAINER_ID" ]; then
+        log "Stopping existing container $CONTAINER_ID"
+        sudo docker stop $CONTAINER_ID
+        sudo docker rm $CONTAINER_ID
+        log "Existing container stopped and removed"
+    else
+        log "No existing container to stop"
+    fi
 }
+
+deploy() {
+    stop_existing_container
+    sudo docker pull daveved/little-daveved-explorer
+    sudo docker run -d -p 8001:8001 daveved/little-daveved-explorer
+    log "Deployment completed"
+}
+
 # Main execution flow
 install_docker
 install_docker_compose
