@@ -16,73 +16,7 @@
   <div class="row">
     <div class="col-12">
       <h2 class="mb-3">Getting Started</h2>
-      <p class="lead" style="font-size: 1.25rem; font-weight: 300;">Choose your preferred way to participate:</p>
+      {% include 'fragments/name_input.html' with context %}
     </div>
-  </div>
-  <div class="row" id="options-container">
-    <div class="col-md-6 mb-4 option-card" data-option-id="1" onclick="selectOption('1')">
-      <div class="card h-100">
-        <div class="card-body" style="padding: 2rem;">
-          <h5 class="card-title">Option 1: Map Selection</h5>
-          <p class="card-text">Select a location on the map and confirm the details.</p>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-6 mb-4 option-card" data-option-id="2" onclick="selectOption('2')">
-      <div class="card h-100">
-        <div class="card-body">
-          <h5 class="card-title">Option 2: Form Submission</h5>
-          <p class="card-text">Fill out the form and submit your suggestion.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- Container to show which option was selected -->
-  <div id="selectedOptionMessage" style="margin-top: 20px;">
-    <!-- Dynamic message will be inserted here -->
-  </div>
-  <!-- Hidden container for name input, shown when an option is selected -->
-  <div id="nameInputContainer" style="display: none;">
-    <!-- Server-side rendered content -->
-    {% include 'fragments/name_input.html' with context %}
   </div>
 </div>
-
-<script>
-  let appState = {
-    selectedOption: null
-  };
-
-  function selectOption(optionId) {
-    appState.selectedOption = optionId; // Update state
-
-    // Highlight the selected option
-    const options = document.querySelectorAll('.option-card');
-    options.forEach(option => {
-      if (option.getAttribute('data-option-id') === optionId) {
-        option.classList.add('selected');
-      } else {
-        option.classList.remove('selected');
-      }
-    });
-
-    // Show the name input container
-    document.getElementById('nameInputContainer').style.display = 'block';
-
-    // Update message to indicate selected option
-    const selectedOptionMessage = document.getElementById('selectedOptionMessage');
-    selectedOptionMessage.innerHTML = `<p>You have selected Option ${optionId}.</p>`; // Dynamically update the message
-
-    // Store the selection in sessionStorage for persistence
-    sessionStorage.setItem('selectedOption', optionId);
-  }
-
-  
-    // Restore selection from sessionStorage on page load
-    document.addEventListener('DOMContentLoaded', () => {
-      const selectedOption = sessionStorage.getItem('selectedOption');
-      if (selectedOption) {
-        selectOption(selectedOption);
-      }
-    });
-  </script>

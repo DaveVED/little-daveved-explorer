@@ -13,5 +13,4 @@ def world_map_root(request: Request):
     }
 
     response = templates.TemplateResponse("home.html", context)
-
     return response

@@ -1,5 +1,15 @@
 {% extends "base.html" %}
 
+{% block styles %}
+<style>
+    #map-container {
+        height: 400px; /* Adjust the height as needed */
+        width: 100%;
+    }
+</style>
+{% endblock %}
+
+
 {% block content %}
 <!-- /explorer content -->
 <div class="container mt-5">
@@ -7,11 +17,14 @@
     {% include 'explorer/intro.html' %}
 
     <!-- Getting Started -->
-    {% include 'explorer/getting_started.html' %}
+    <div class="getting-started-container">
+        {% include 'explorer/getting_started.html' %}
+    </div>
     
-    <!-- Content -->
-    {% include 'fragments/map.html' with context %}
-    {% include 'explorer/history.html' with context %}
+    <!-- Map Container -->
+    <div class="map-container">
+        {% include 'fragments/map.html' with context %}
+    </div>
 </div>
 {% endblock %}
 
@@ -21,7 +34,7 @@
     var coordinates = JSON.parse('{{ coordinates | tojson | safe }}');
 
     // Initialize the Leaflet map centered over the United States
-    var map = L.map('map').setView([37.0902, -95.7129], 4); // Adjusted for the US with a suitable zoom level
+    var map = L.map('map').setView([37.0902, -95.7129], 3);
 
     // Add an OpenStreetMap tile layer to the map
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -29,25 +42,84 @@
         attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
     }).addTo(map);
 
-    // Iterate over the coordinates to add markers to the map
-    coordinates.forEach(function(coordinate) {
-        console.log(JSON.stringify(coordinate));
-        var marker = L.marker([coordinate.latitude, coordinate.longitude])
-            .bindPopup("<b>Type:</b> " + coordinate.type + "<br><b>Latitude:</b> " + coordinate.latitude + "<br><b>Longitude:</b> " + coordinate.longitude)
-            .addTo(map);
-    });
+    function addMarkersToMap() {
+        // Iterate over the coordinates to add markers to the map
+        coordinates.forEach(function(coordinate) {
+            var popupContent = `
+                <b>Type:</b> ${coordinate.type}<br>
+                <b>Latitude:</b> ${coordinate.latitude}<br>
+                <b>Longitude:</b> ${coordinate.longitude}<br>
+                <b>Created By:</b> ${coordinate.created_by}<br>
+                <b>Created On:</b> ${coordinate.created_on}<br>
+            `;
+            
+            L.marker([coordinate.latitude, coordinate.longitude])
+                .bindPopup(popupContent)
+                .addTo(map);
+        });
+    }
 
-    function confirmLocation() {
-        // Placeholder for the function to be called when the "Confirm" button is clicked
-        alert('Location confirmed!');
+    addMarkersToMap();
+
+    async function updateSelection(latitude, longitude, name) {
+        try {
+            const response = await fetch('/explorer/update-selection', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    latitude: parseFloat(latitude),
+                    longitude: parseFloat(longitude), 
+                    name: name, 
+                }),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error('Error response:', errorData);
+                alert(`Error: ${errorData.detail}`);
+                return;
+            }
+
+            const data = await response.json();
+            console.log(data.message);
+            alert(data.message);
+
+            // Add the newly added marker to the map
+            var popupContent = `
+                <b>Type:</b> Hardcoded type<br>
+                <b>Latitude:</b> ${latitude}<br>
+                <b>Longitude:</b> ${longitude}<br>
+                <b>Created By:</b> ${name}<br>
+                <b>Created On:</b> ${new Date().toLocaleString()}<br>
+            `;
+            
+            L.marker([latitude, longitude])
+                .bindPopup(popupContent)
+                .addTo(map);
+
+            // Close the popup after successful update
+            map.closePopup();
+        } catch (error) {
+            console.error('Fetch error:', error);
+            alert('An error occurred while updating the selection.');
+        }
     }
 
     var popup = L.popup();
+
     function onMapClick(e) {
-        popup
-            .setLatLng(e.latlng)
-            .setContent("You clicked the map at " + e.latlng.toString() + '<br><button onclick="confirmLocation()">Confirm</button>')
-            .openOn(map);
+        var latlng = e.latlng;
+        var content = `
+            <div>You clicked the map at ${latlng.toString()}</div>
+            <button onclick='confirmLocation(${JSON.stringify(latlng)})'>Confirm</button>
+        `;
+        popup.setLatLng(latlng).setContent(content).openOn(map);
+    }
+
+    function confirmLocation(latlng) {
+        updateSelection(latlng.lat, latlng.lng, "User Name");
     }
 
     map.on('click', onMapClick);

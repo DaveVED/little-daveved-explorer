@@ -1,11 +1,14 @@
+from pydantic import BaseModel
+
 from sqlalchemy.orm import Session
 
 from fastapi import APIRouter, Request, Depends
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
+from fastapi import HTTPException
 
 from app.api.database import SessionLocal
-from app.api.models.coordinate import get_all_coordinates
+from app.api.models.coordinate import get_all_coordinates, add_coordinate
 
 router = APIRouter()
 templates = Jinja2Templates(directory="templates")
@@ -71,34 +74,41 @@ def explorer(request: Request, db: Session = Depends(get_db)):
     }
     return templates.TemplateResponse("explorer/explorer.html", context)
 
-@router.get("/get-selectable-options", response_class=HTMLResponse)
-def get_selectable_options(request: Request):
-    context = {
-        "request": request,
-        "title": "Explorer",
-        "options": selectable_explorer_options,
-        "isOptionSelected": is_option_selected
-    }
+class CoordinateUpdate(BaseModel):
+    latitude: float
+    longitude: float
+    name: str
 
-    return templates.TemplateResponse("explorer/getting_started_options.html", context)
+@router.post("/update-selection")
+def update_selection(coordinate_update: CoordinateUpdate, db: Session = Depends(get_db)):
+    """
+    Update the selection based on user input.
 
-@router.get("/toggle-selectable-option/{option_id}", response_class=HTMLResponse)
-def set_selectable_options(request: Request, option_id: int):
-    adjusted_option_id = option_id - 1
+    Args:
+        coordinate_update (CoordinateUpdate): Request body containing latitude, longitude, and name.
+        db (Session): Database session.
 
-    # Clear out all options
-    for option in selectable_explorer_options:
-        option["selected"] = False
-    
-    if 0 <= adjusted_option_id < len(selectable_explorer_options):
-        selectable_explorer_options[adjusted_option_id]["selected"] = True
-    
-    is_option_selected = True
-    context = {
-        "request": request,
-        "title": "Explorer",
-        "options": selectable_explorer_options,
-        "isOptionSelected": is_option_selected
-    }
+    Returns:
+        A message indicating the update was successful or an error.
+    """
+    try:
+        # Use the data from coordinate_update to update the selection
+        # For example, create or update a model instance
+        
+        # Write the coordinate to the database
+        new_coordinate = add_coordinate(
+            db=db,
+            latitude=coordinate_update.latitude,
+            longitude=coordinate_update.longitude,
+            type="Hardcoded type",  # Hardcoded for now
+            user=coordinate_update.name
+        )
 
-    return templates.TemplateResponse("explorer/getting_started_options.html", context)
+        # Get all coordinates after adding the new one
+        coordinates = get_all_coordinates(db)
+
+        # Return a success message along with the updated list of coordinates
+        return {"message": f"Selection updated for {coordinate_update.name} at ({coordinate_update.latitude}, {coordinate_update.longitude}). Coordinate ID: {new_coordinate.id}", "coordinates": coordinates}
+    except Exception as e:
+        print(e)
+        raise HTTPException(status_code=500, detail="An error occurred while updating the selection.")
