@@ -3,7 +3,7 @@
 
 A web application designed to collect and visualize geographical data from users. It allows users to share their starting locations and suggest destinations for future travels. This application is particularly envisioned for events such as baby showers, where guests can indicate where they have traveled from and recommend places to take the baby once born. 
 
-Application is [live here](https://little-explorer.daveved.com/explorer/) Live Here. Data will be rest before event, and locked after. If accessing before event feel free to play around. 
+Application is [live here](https://little-explorer.daveved.com/explorer/). Data will be rest before event, and locked after. If accessing before event feel free to play around. 
 
 ## Features 🚀
 - Interactive Map: Users can interactively drop pins on a map.
