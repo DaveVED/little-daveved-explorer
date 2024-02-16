@@ -28,8 +28,8 @@ jobs:
 
       - name: Lint with ruff
         run: |
-          ruff check daveved
-          ruff --fix daveved
+          ruff check app
+          ruff --fix app
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
