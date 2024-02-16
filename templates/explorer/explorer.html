@@ -42,8 +42,8 @@
         attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
     }).addTo(map);
 
+    // Iterate over the coordinates to add markers to the map
     function addMarkersToMap() {
-        // Iterate over the coordinates to add markers to the map
         coordinates.forEach(function(coordinate) {
             var popupContent = `
                 <b>Type:</b> ${coordinate.type}<br>
@@ -57,8 +57,7 @@
                 .bindPopup(popupContent)
                 .addTo(map);
         });
-    }
-
+    };
     addMarkersToMap();
 
     async function updateSelection(latitude, longitude, name) {

@@ -104,10 +104,8 @@ def update_selection(coordinate_update: CoordinateUpdate, db: Session = Depends(
             user=coordinate_update.name
         )
 
-        # Get all coordinates after adding the new one
         coordinates = get_all_coordinates(db)
 
-        # Return a success message along with the updated list of coordinates
         return {"message": f"Selection updated for {coordinate_update.name} at ({coordinate_update.latitude}, {coordinate_update.longitude}). Coordinate ID: {new_coordinate.id}", "coordinates": coordinates}
     except Exception as e:
         print(e)
