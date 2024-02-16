@@ -1,2 +1,2 @@
 <!-- A leafletjs frament that can be used throughout different features/apps -->
-<div id="map" style="height: 40vh; width: 100%"></div>
+<div id="map" data-coordinates='{{ coordinates | tojson | safe }}' style="height: 40vh; width: 100%"></div>

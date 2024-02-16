@@ -77,7 +77,8 @@ def explorer(request: Request, db: Session = Depends(get_db)):
 class CoordinateUpdate(BaseModel):
     latitude: float
     longitude: float
-    name: str
+    created_by: str
+    type: str
 
 @router.post("/update-selection")
 def update_selection(coordinate_update: CoordinateUpdate, db: Session = Depends(get_db)):
@@ -100,13 +101,13 @@ def update_selection(coordinate_update: CoordinateUpdate, db: Session = Depends(
             db=db,
             latitude=coordinate_update.latitude,
             longitude=coordinate_update.longitude,
-            type="Hardcoded type",  # Hardcoded for now
-            user=coordinate_update.name
+            type=coordinate_update.type,
+            user=coordinate_update.created_by
         )
 
         coordinates = get_all_coordinates(db)
 
-        return {"message": f"Selection updated for {coordinate_update.name} at ({coordinate_update.latitude}, {coordinate_update.longitude}). Coordinate ID: {new_coordinate.id}", "coordinates": coordinates}
+        return {"message": f"Selection updated for {coordinate_update.created_by} at ({coordinate_update.latitude}, {coordinate_update.longitude}). Coordinate ID: {new_coordinate.id}", "coordinates": coordinates}
     except Exception as e:
         print(e)
         raise HTTPException(status_code=500, detail="An error occurred while updating the selection.")
