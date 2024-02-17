@@ -78,6 +78,11 @@ document.addEventListener("DOMContentLoaded", function() {
                 <div class="marker-pin" style="background-color:#0bc336;"></div>
                 <i class="material-icons" style="color:#0bc336;">public</i>
             `;
+        } else if (coordinate.type === 'BabyVisitedDestination') {
+            iconHTML = `
+            <div class="marker-pin" style="background-color:#9c27b0;"></div>
+            <i class="material-icons" style="color:#9c27b0;">child_friendly</i>
+            `;
         } else {
             iconHTML = `
                 <div class="marker-pin" style="background-color:#808080;"></div>
@@ -117,6 +122,9 @@ document.addEventListener("DOMContentLoaded", function() {
                 </label>
                 <label>
                     <input type="checkbox" name="type" value="SuggestedDestination"> Suggested Destination
+                </label>
+                <label>
+                    <input type="checkbox" name="type" value="BabyVisitedDestination"> Baby Visited
                 </label>
             </div>
         `;
